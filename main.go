@@ -6,11 +6,22 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"time"
 )
 
 func main() {
 	fileName := readArguments()
-	problems := readCSV(fileName)
+	file, err := os.Open(fileName)
+	checkErr(err)
+	defer file.Close()
+	problems := csv.NewReader(file)
+	// correct := 0
+
+	fmt.Println("Welcome to the Quiz!")
+	fmt.Println("We will present to you your questions now.")
+	time.Sleep(time.Second)
+	fmt.Println("Answer wisely!")
+	time.Sleep(time.Second)
 
 	for {
 		problem, err := problems.Read()
@@ -18,6 +29,7 @@ func main() {
 			break
 		}
 		checkErr(err)
+		// evaluateProblem(problem)
 		fmt.Println(problem)
 	}
 }
@@ -34,11 +46,9 @@ func readArguments() string {
 	return *fileName
 }
 
-func readCSV(f string) *csv.Reader {
-	file, err := os.Open(f)
-	checkErr(err)
-	return csv.NewReader(file)
-}
+// func evaluateProblem(p []string) bool {
+
+// }
 
 func checkErr(e error) {
 	if e != nil {
